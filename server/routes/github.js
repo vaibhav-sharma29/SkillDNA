@@ -20,20 +20,15 @@ router.get('/:username', async (req, res) => {
     const user = userRes.data
     const repos = reposRes.data
 
-    // Language frequency map
     const languageMap = {}
     repos.forEach(repo => {
-      if (repo.language) {
-        languageMap[repo.language] = (languageMap[repo.language] || 0) + 1
-      }
+      if (repo.language) languageMap[repo.language] = (languageMap[repo.language] || 0) + 1
     })
 
-    // Top languages sorted
     const topLanguages = Object.entries(languageMap)
       .sort((a, b) => b[1] - a[1])
       .map(([lang, count]) => ({ lang, count }))
 
-    // Commit activity - fetch for top 5 repos
     const topRepos = repos.slice(0, 5)
     let totalCommits = 0
     let commitDetails = []
@@ -51,22 +46,17 @@ router.get('/:username', async (req, res) => {
           lastCommit: commitsRes.data[0]?.commit?.author?.date || null,
           sampleMessages: commitsRes.data.slice(0, 3).map(c => c.commit.message)
         })
-      } catch {
-        // repo may be empty
-      }
+      } catch {}
     }
 
-    // Contribution frequency - days since last push
     const lastActive = repos[0]?.pushed_at ? new Date(repos[0].pushed_at) : null
     const daysSinceActive = lastActive
       ? Math.floor((Date.now() - lastActive) / (1000 * 60 * 60 * 24))
       : null
 
-    // Stars & forks total
     const totalStars = repos.reduce((sum, r) => sum + r.stargazers_count, 0)
     const totalForks = repos.reduce((sum, r) => sum + r.forks_count, 0)
 
-    // Project complexity score (basic heuristic)
     const avgRepoSize = repos.length
       ? repos.reduce((sum, r) => sum + r.size, 0) / repos.length
       : 0

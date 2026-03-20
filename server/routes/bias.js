@@ -2,7 +2,7 @@ const express = require('express')
 const Groq = require('groq-sdk')
 const router = express.Router()
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+const getGroq = () => new Groq({ apiKey: process.env.GROQ_API_KEY })
 
 router.post('/check', async (req, res) => {
   try {
@@ -10,8 +10,7 @@ router.post('/check', async (req, res) => {
     const { profile, signals } = githubSignals
     const languages = signals.topLanguages.map(l => `${l.lang}(${l.count} repos)`).join(', ')
 
-    const baseData = `
-- Top Languages: ${languages}
+    const baseData = `- Top Languages: ${languages}
 - Total Public Repos: ${profile.publicRepos}
 - Total Stars Earned: ${signals.totalStars}
 - Complexity Level: ${signals.complexityLevel}
@@ -19,8 +18,7 @@ router.post('/check', async (req, res) => {
 - Days Since Last Active: ${signals.daysSinceLastActive}
 - Total Commits Sampled: ${signals.totalCommitsSampled}`
 
-    const promptWith = `
-You are a talent intelligence engine. Score this candidate against the job description.
+    const promptWith = `You are a talent intelligence engine. Score this candidate against the job description.
 
 CANDIDATE DATA (with identity):
 - Name: ${candidateMeta?.name || profile.name || 'Unknown'}
@@ -33,8 +31,7 @@ ${jobDescription}
 
 Return ONLY valid JSON: { "score": <0-100>, "reasoning": "1 sentence" }`
 
-    const promptWithout = `
-You are a talent intelligence engine. Score this candidate against the job description.
+    const promptWithout = `You are a talent intelligence engine. Score this candidate against the job description.
 
 CANDIDATE DATA (identity removed):
 ${baseData}
@@ -45,13 +42,13 @@ ${jobDescription}
 Return ONLY valid JSON: { "score": <0-100>, "reasoning": "1 sentence" }`
 
     const [withRes, withoutRes] = await Promise.all([
-      groq.chat.completions.create({
-        model: 'llama3-8b-8192',
+      getGroq().chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: promptWith }],
         temperature: 0.1
       }),
-      groq.chat.completions.create({
-        model: 'llama3-8b-8192',
+      getGroq().chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: promptWithout }],
         temperature: 0.1
       })

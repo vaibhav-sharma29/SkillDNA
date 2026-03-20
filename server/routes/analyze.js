@@ -2,18 +2,15 @@ const express = require('express')
 const Groq = require('groq-sdk')
 const router = express.Router()
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
+const getGroq = () => new Groq({ apiKey: process.env.GROQ_API_KEY })
 
-// Score a candidate's GitHub signals against a job description
 router.post('/score', async (req, res) => {
   try {
     const { githubSignals, jobDescription, candidateMeta } = req.body
-
     const { profile, signals } = githubSignals
     const languages = signals.topLanguages.map(l => `${l.lang}(${l.count} repos)`).join(', ')
 
-    const prompt = `
-You are a talent intelligence engine. Analyze this candidate's real GitHub activity against the job description.
+    const prompt = `You are a talent intelligence engine. Analyze this candidate's real GitHub activity against the job description.
 
 CANDIDATE GITHUB DATA:
 - Name: ${candidateMeta?.name || profile.name || profile.username}
@@ -39,8 +36,8 @@ Return ONLY a valid JSON object in this exact format:
   "verdict": "Strong Match | Good Match | Partial Match | Weak Match"
 }`
 
-    const completion = await groq.chat.completions.create({
-      model: 'llama3-8b-8192',
+    const completion = await getGroq().chat.completions.create({
+      model: 'llama-3.3-70b-versatile',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.3
     })
@@ -56,20 +53,17 @@ Return ONLY a valid JSON object in this exact format:
   }
 })
 
-// Score multiple candidates and return ranked list
 router.post('/rank', async (req, res) => {
   try {
     const { candidates, jobDescription } = req.body
-    // candidates = [{ githubSignals, candidateMeta }]
-
     const results = []
+
     for (const candidate of candidates) {
       const { githubSignals, candidateMeta } = candidate
       const { profile, signals } = githubSignals
       const languages = signals.topLanguages.map(l => `${l.lang}(${l.count} repos)`).join(', ')
 
-      const prompt = `
-You are a talent intelligence engine. Analyze this candidate's real GitHub activity against the job description.
+      const prompt = `You are a talent intelligence engine. Analyze this candidate's real GitHub activity against the job description.
 
 CANDIDATE GITHUB DATA:
 - Name: ${candidateMeta?.name || profile.name || profile.username}
@@ -95,8 +89,8 @@ Return ONLY a valid JSON object:
   "verdict": "Strong Match | Good Match | Partial Match | Weak Match"
 }`
 
-      const completion = await groq.chat.completions.create({
-        model: 'llama3-8b-8192',
+      const completion = await getGroq().chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.3
       })
@@ -109,10 +103,8 @@ Return ONLY a valid JSON object:
       }
     }
 
-    // Sort by score descending
     results.sort((a, b) => b.score - a.score)
     const ranked = results.map((r, i) => ({ rank: i + 1, ...r }))
-
     res.json({ success: true, ranked })
   } catch (err) {
     res.status(500).json({ error: err.message })

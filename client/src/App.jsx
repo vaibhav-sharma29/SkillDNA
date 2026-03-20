@@ -4,6 +4,7 @@ import Landing from './pages/Landing'
 import Analyze from './pages/Analyze'
 import Report from './pages/Report'
 import Compare from './pages/Compare'
+import Candidate from './pages/Candidate'
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="/analyze" element={<Analyze />} />
           <Route path="/report/:username" element={<Report />} />
           <Route path="/compare" element={<Compare />} />
+          <Route path="/candidate" element={<Candidate />} />
         </Routes>
       </div>
     </BrowserRouter>

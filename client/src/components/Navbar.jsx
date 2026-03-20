@@ -6,6 +6,7 @@ export default function Navbar() {
 
   const links = [
     { to: '/', label: 'Home' },
+    { to: '/candidate', label: 'My SkillDNA' },
     { to: '/analyze', label: 'Analyze' },
     { to: '/compare', label: 'Compare' },
   ]
