@@ -1,10 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Landing from './pages/Landing'
-import Analyze from './pages/Analyze'
-import Report from './pages/Report'
-import Compare from './pages/Compare'
+import RecruiterDashboard from './pages/RecruiterDashboard'
+import PostJob from './pages/PostJob'
+import Jobs from './pages/Jobs'
+import Apply from './pages/Apply'
 import Candidate from './pages/Candidate'
+import Report from './pages/Report'
 
 export default function App() {
   return (
@@ -13,10 +15,12 @@ export default function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Landing />} />
-          <Route path="/analyze" element={<Analyze />} />
-          <Route path="/report/:username" element={<Report />} />
-          <Route path="/compare" element={<Compare />} />
+          <Route path="/recruiter" element={<RecruiterDashboard />} />
+          <Route path="/recruiter/post-job" element={<PostJob />} />
+          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/jobs/:jobId/apply" element={<Apply />} />
           <Route path="/candidate" element={<Candidate />} />
+          <Route path="/report/:username" element={<Report />} />
         </Routes>
       </div>
     </BrowserRouter>

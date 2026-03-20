@@ -7,15 +7,15 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// MongoDB connect
 mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/skilldna')
   .then(() => console.log('MongoDB connected'))
   .catch(() => console.log('MongoDB not connected - running without DB'))
 
-// Routes
 app.use('/api/github', require('./routes/github'))
 app.use('/api/analyze', require('./routes/analyze'))
 app.use('/api/bias', require('./routes/bias'))
+app.use('/api/resume', require('./routes/resume'))
+app.use('/api/jobs', require('./routes/jobs').router)
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'SkillDNA API running' }))
 
