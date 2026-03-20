@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
+import './pages.css'
 
 const COLORS = ['#7c3aed', '#8b5cf6', '#6d28d9', '#a78bfa', '#5b21b6', '#c4b5fd']
 
@@ -253,114 +254,128 @@ export default function RecruiterDashboard() {
   }
 
   return (
-    <div className="min-h-screen px-6 py-10 max-w-6xl mx-auto">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between mb-8">
+    <div className="page-wrapper" style={{ maxWidth: '1280px' }}>
+      <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '56px', gap: '24px', flexWrap: 'wrap' }}>
           <div>
-            <h1 className="text-4xl font-black text-white mb-1">Recruiter <span className="gradient-text">Dashboard</span></h1>
-            <p className="text-white/35 text-sm">AI-verified candidates · ranked by real signals</p>
+            <div className="page-tag">🏢 Recruiter Portal</div>
+            <h1 className="page-title">Recruiter <span className="gradient-text">Dashboard</span></h1>
+            <p className="page-subtitle">AI-verified candidates · ranked by real GitHub signals</p>
           </div>
           <Link to="/recruiter/post-job">
-            <motion.button whileHover={{ scale: 1.04, boxShadow: '0 0 25px rgba(124,58,237,0.35)' }} whileTap={{ scale: 0.96 }}
-              className="bg-gradient-to-r from-violet-600 to-purple-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition-all">
+            <motion.button whileHover={{ scale: 1.04, boxShadow: '0 0 32px rgba(124,58,237,0.4)' }} whileTap={{ scale: 0.96 }}
+              className="btn-primary">
               + Post New Job
             </motion.button>
           </Link>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-5">
-          <div className="space-y-2">
-            <div className="text-white/30 text-xs font-semibold uppercase tracking-widest mb-3">Jobs ({jobs.length})</div>
-            {loading ? (
-              <div className="glass rounded-2xl p-6 text-center text-white/25 text-sm">Loading...</div>
-            ) : jobs.length === 0 ? (
-              <div className="glass rounded-2xl p-8 text-center">
-                <div className="text-3xl mb-2">📋</div>
-                <div className="text-white/35 text-sm mb-3">No jobs yet</div>
-                <Link to="/recruiter/post-job" className="text-violet-400 text-xs hover:underline">Post first job →</Link>
-              </div>
-            ) : jobs.map(job => (
-              <motion.div key={job._id} whileHover={{ scale: 1.02 }} onClick={() => loadApplications(job)}
-                className={`glass card-hover rounded-xl p-4 cursor-pointer transition-all ${selectedJob?._id === job._id ? 'border-violet-500/40 bg-violet-500/5 glow-sm' : ''}`}>
-                <div className="text-white font-semibold text-sm">{job.title}</div>
-                <div className="text-white/35 text-xs mt-0.5">{job.company}</div>
-                <div className="flex items-center gap-2 mt-2">
-                  {job.experience && <span className="text-violet-400 text-xs">{job.experience}</span>}
-                  {job.remote && <span className="bg-emerald-500/10 text-emerald-400 text-xs px-2 py-0.5 rounded-full border border-emerald-500/20">Remote</span>}
+        {/* Main grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '24px', alignItems: 'start' }}>
+
+          {/* Jobs sidebar */}
+          <div>
+            <div style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)', marginBottom: '16px' }}>
+              Jobs ({jobs.length})
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              {loading ? (
+                <div className="card" style={{ padding: '24px', textAlign: 'center', color: 'rgba(255,255,255,0.2)', fontSize: '14px' }}>Loading...</div>
+              ) : jobs.length === 0 ? (
+                <div className="card" style={{ padding: '40px 24px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '32px', marginBottom: '12px' }}>📋</div>
+                  <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px', marginBottom: '12px' }}>No jobs yet</div>
+                  <Link to="/recruiter/post-job" style={{ color: '#a78bfa', fontSize: '13px', textDecoration: 'none' }}>Post first job →</Link>
                 </div>
-              </motion.div>
-            ))}
+              ) : jobs.map(job => (
+                <motion.div key={job._id} whileHover={{ scale: 1.01 }} onClick={() => loadApplications(job)}
+                  style={{
+                    background: selectedJob?._id === job._id ? 'rgba(124,58,237,0.08)' : 'rgba(255,255,255,0.025)',
+                    border: `1px solid ${selectedJob?._id === job._id ? 'rgba(124,58,237,0.35)' : 'rgba(255,255,255,0.07)'}`,
+                    borderRadius: '16px', padding: '18px 20px', cursor: 'pointer', transition: 'all 0.2s ease',
+                    boxShadow: selectedJob?._id === job._id ? '0 0 20px rgba(124,58,237,0.12)' : 'none'
+                  }}>
+                  <div style={{ color: '#fff', fontWeight: 600, fontSize: '14px', marginBottom: '4px' }}>{job.title}</div>
+                  <div style={{ color: 'rgba(255,255,255,0.35)', fontSize: '12px', marginBottom: '10px' }}>{job.company}</div>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    {job.experience && <span style={{ color: '#a78bfa', fontSize: '11px', fontWeight: 600 }}>{job.experience}</span>}
+                    {job.remote && <span style={{ background: 'rgba(16,185,129,0.1)', color: '#34d399', fontSize: '11px', padding: '2px 10px', borderRadius: '50px', border: '1px solid rgba(16,185,129,0.2)', fontWeight: 600 }}>Remote</span>}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
 
-          <div className="md:col-span-2">
+          {/* Applications panel */}
+          <div>
             {!selectedJob ? (
-              <div className="glass rounded-3xl h-full min-h-64 flex flex-col items-center justify-center text-center p-12">
-                <motion.div animate={{ x: [-4, 4, -4] }} transition={{ repeat: Infinity, duration: 2.5 }} className="text-4xl mb-3">👈</motion.div>
-                <div className="text-white/25">Select a job to view applicants</div>
+              <div className="card" style={{ minHeight: '320px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '64px' }}>
+                <motion.div animate={{ x: [-4, 4, -4] }} transition={{ repeat: Infinity, duration: 2.5 }} style={{ fontSize: '40px', marginBottom: '16px' }}>👈</motion.div>
+                <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: '15px' }}>Select a job to view applicants</div>
               </div>
             ) : (
               <div>
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h2 className="text-white font-bold">{selectedJob.title}</h2>
-                    <p className="text-white/35 text-xs">{applications.length} applicants · sorted by AI score</p>
-                  </div>
+                <div style={{ marginBottom: '24px' }}>
+                  <h2 style={{ color: '#fff', fontWeight: 800, fontSize: '20px', letterSpacing: '-0.3px', marginBottom: '4px' }}>{selectedJob.title}</h2>
+                  <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '13px' }}>{applications.length} applicants · sorted by AI score</p>
                 </div>
 
                 {loadingApps ? (
-                  <div className="glass rounded-2xl p-8 text-center text-white/30 text-sm">Analyzing candidates...</div>
+                  <div className="card" style={{ padding: '48px', textAlign: 'center', color: 'rgba(255,255,255,0.25)', fontSize: '14px' }}>Analyzing candidates...</div>
                 ) : applications.length === 0 ? (
-                  <div className="glass rounded-2xl p-10 text-center">
-                    <div className="text-3xl mb-2">⏳</div>
-                    <div className="text-white/35 text-sm">No applicants yet</div>
+                  <div className="card" style={{ padding: '64px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '36px', marginBottom: '12px' }}>⏳</div>
+                    <div style={{ color: 'rgba(255,255,255,0.3)', fontSize: '14px' }}>No applicants yet</div>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     {applications.map((app, i) => {
                       const vs = verdictStyle[app.scoreData?.verdict] || { text: 'text-white/40', bg: 'bg-white/5', border: 'border-white/10' }
                       return (
                         <motion.div key={app._id} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
-                          className="glass card-hover rounded-2xl p-4 border border-white/5">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="relative shrink-0">
+                          className="card" style={{ padding: '20px 24px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '14px' }}>
+                            <div style={{ position: 'relative', flexShrink: 0 }}>
                               {app.avatarUrl
-                                ? <img src={app.avatarUrl} alt="" className="w-11 h-11 rounded-xl border border-violet-500/25" />
-                                : <div className="w-11 h-11 rounded-xl bg-violet-600/15 flex items-center justify-center text-violet-400 font-bold">{app.username?.[0]?.toUpperCase()}</div>
+                                ? <img src={app.avatarUrl} alt="" style={{ width: '44px', height: '44px', borderRadius: '12px', border: '1px solid rgba(124,58,237,0.25)' }} />
+                                : <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: 'rgba(124,58,237,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#a78bfa', fontWeight: 700, fontSize: '16px' }}>{app.username?.[0]?.toUpperCase()}</div>
                               }
-                              <div className={`absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-black ${i === 0 ? 'bg-yellow-500' : i === 1 ? 'bg-slate-400' : i === 2 ? 'bg-orange-500' : 'bg-violet-600'}`}>
+                              <div style={{ position: 'absolute', top: '-6px', left: '-6px', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '10px', fontWeight: 900, background: i === 0 ? '#eab308' : i === 1 ? '#94a3b8' : i === 2 ? '#f97316' : '#7c3aed' }}>
                                 {i + 1}
                               </div>
                             </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="text-white font-semibold text-sm truncate">{app.candidateName || app.username}</div>
-                              <a href={`https://github.com/${app.username}`} target="_blank" rel="noreferrer" className="text-violet-400 text-xs hover:underline">@{app.username}</a>
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ color: '#fff', fontWeight: 600, fontSize: '15px', marginBottom: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{app.candidateName || app.username}</div>
+                              <a href={`https://github.com/${app.username}`} target="_blank" rel="noreferrer" style={{ color: '#a78bfa', fontSize: '12px', textDecoration: 'none' }}>@{app.username}</a>
                             </div>
-                            <div className="text-right shrink-0">
-                              <div className="text-2xl font-black text-violet-400">{app.scoreData?.score ?? '—'}</div>
-                              <div className="text-white/20 text-xs">/100</div>
+                            <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                              <div style={{ fontSize: '26px', fontWeight: 900, color: '#a78bfa', lineHeight: 1 }}>{app.scoreData?.score ?? '—'}</div>
+                              <div style={{ color: 'rgba(255,255,255,0.2)', fontSize: '11px' }}>/100</div>
                             </div>
                           </div>
 
-                          <div className="w-full bg-white/5 rounded-full h-1 mb-3">
+                          <div style={{ width: '100%', background: 'rgba(255,255,255,0.05)', borderRadius: '50px', height: '3px', marginBottom: '14px' }}>
                             <motion.div initial={{ width: 0 }} animate={{ width: `${app.scoreData?.score || 0}%` }} transition={{ duration: 1, delay: i * 0.08 }}
-                              className="h-1 rounded-full bg-gradient-to-r from-violet-500 to-purple-500" />
+                              style={{ height: '3px', borderRadius: '50px', background: 'linear-gradient(90deg, #7c3aed, #a78bfa)' }} />
                           </div>
 
-                          <div className="flex items-center gap-2 mb-3 flex-wrap">
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
                             {app.scoreData?.verdict && (
                               <span className={`px-2.5 py-0.5 rounded-full border text-xs font-semibold ${vs.text} ${vs.bg} ${vs.border}`}>{app.scoreData.verdict}</span>
                             )}
-                            {app.biasData?.biasDetected === false && <span className="text-emerald-400 text-xs glass px-2.5 py-0.5 rounded-full border border-emerald-500/20">⚖️ Bias Free</span>}
-                            {app.resumeVerification && <span className="text-blue-400 text-xs glass px-2.5 py-0.5 rounded-full border border-blue-500/20">📄 Verified</span>}
+                            {app.biasData?.biasDetected === false && <span style={{ color: '#34d399', fontSize: '11px', background: 'rgba(16,185,129,0.08)', padding: '3px 10px', borderRadius: '50px', border: '1px solid rgba(16,185,129,0.2)', fontWeight: 600 }}>⚖️ Bias Free</span>}
+                            {app.resumeVerification && <span style={{ color: '#60a5fa', fontSize: '11px', background: 'rgba(59,130,246,0.08)', padding: '3px 10px', borderRadius: '50px', border: '1px solid rgba(59,130,246,0.2)', fontWeight: 600 }}>📄 Verified</span>}
                           </div>
 
-                          <div className="flex gap-2">
+                          <div style={{ display: 'flex', gap: '8px' }}>
                             <a href={`https://github.com/${app.username}`} target="_blank" rel="noreferrer"
-                              className="flex-1 text-center glass hover:bg-white/5 text-white/40 hover:text-white/70 text-xs py-2 rounded-lg transition-all">
+                              style={{ flex: 1, textAlign: 'center', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.4)', fontSize: '12px', padding: '9px', borderRadius: '10px', textDecoration: 'none', transition: 'all 0.2s ease', fontWeight: 500 }}>
                               GitHub
                             </a>
                             <button onClick={() => setSelectedCandidate(app)}
-                              className="flex-1 text-center bg-violet-600/15 hover:bg-violet-600/25 border border-violet-500/25 text-violet-400 text-xs py-2 rounded-lg transition-all font-semibold">
+                              style={{ flex: 1, background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.25)', color: '#a78bfa', fontSize: '12px', padding: '9px', borderRadius: '10px', cursor: 'pointer', fontWeight: 700, transition: 'all 0.2s ease' }}>
                               Full Report →
                             </button>
                           </div>

@@ -1,0 +1,201 @@
+/* ── Shared page layout ── */
+.page-wrapper {
+  min-height: 100vh;
+  padding: 80px 60px 120px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.page-header {
+  margin-bottom: 64px;
+}
+
+.page-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.25);
+  color: #a78bfa;
+  padding: 7px 18px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-size: clamp(36px, 5vw, 60px);
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -2px;
+  line-height: 1.05;
+  margin-bottom: 14px;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: rgba(255,255,255,0.38);
+  line-height: 1.7;
+  max-width: 520px;
+}
+
+/* ── Cards ── */
+.card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 20px;
+  padding: 32px;
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  border-color: rgba(124,58,237,0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(124,58,237,0.1);
+}
+
+.card-lg {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 28px;
+  padding: 44px;
+}
+
+/* ── Form inputs ── */
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 10px;
+}
+
+.field-input {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.field-input::placeholder { color: rgba(255,255,255,0.18); }
+.field-input:focus { border-color: rgba(124,58,237,0.5); }
+
+.field-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  resize: none;
+  transition: border-color 0.2s ease;
+  line-height: 1.7;
+}
+
+.field-textarea::placeholder { color: rgba(255,255,255,0.18); }
+.field-textarea:focus { border-color: rgba(124,58,237,0.5); }
+
+.field-select {
+  width: 100%;
+  background: #050508;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+}
+
+.field-select:focus { border-color: rgba(124,58,237,0.5); }
+
+/* ── Buttons ── */
+.btn-primary {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 15px 32px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  box-shadow: 0 0 24px rgba(124,58,237,0.3);
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(124,58,237,0.5); }
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.btn-outline {
+  background: transparent;
+  color: rgba(255,255,255,0.55);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.btn-outline:hover { border-color: rgba(124,58,237,0.4); color: #fff; background: rgba(124,58,237,0.08); }
+
+/* ── Skill tags ── */
+.skill-tag {
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.2);
+  color: #a78bfa;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 14px;
+  border-radius: 50px;
+}
+
+/* ── Error / success banners ── */
+.banner-error {
+  background: rgba(239,68,68,0.07);
+  border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: #f87171;
+  font-size: 14px;
+}
+
+/* ── Divider ── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124,58,237,0.2), transparent);
+  margin: 64px 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .page-wrapper { padding: 60px 32px 80px; }
+}
+
+@media (max-width: 640px) {
+  .page-wrapper { padding: 48px 20px 64px; }
+  .page-title { letter-spacing: -1px; }
+  .card-lg { padding: 28px 20px; }
+}

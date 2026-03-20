@@ -35,3 +35,5 @@ body {
 
 .blur-name { filter: blur(6px); transition: filter 0.3s ease; }
 .blur-avatar { filter: blur(8px); transition: filter 0.3s ease; }
+
+@keyframes spin { to { transform: rotate(360deg); } }

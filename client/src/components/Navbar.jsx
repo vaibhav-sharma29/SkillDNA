@@ -1,36 +1,55 @@
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import './Navbar.css'
+
+const navLinks = [
+  { to: '/', label: 'Home', exact: true },
+  { to: '/jobs', label: 'Jobs', match: '/jobs' },
+  { to: '/recruiter', label: 'Recruiter', match: '/recruiter' },
+]
 
 export default function Navbar() {
   const { pathname } = useLocation()
-  const isRecruiter = pathname.startsWith('/recruiter')
-  const isCandidate = pathname.startsWith('/jobs') || pathname.startsWith('/candidate')
+
+  const isActive = (link) => {
+    if (link.exact) return pathname === '/'
+    return pathname.startsWith(link.match)
+  }
 
   return (
-    <nav className="glass border-b border-white/5 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-      <Link to="/" className="flex items-center gap-3">
-        <motion.div whileHover={{ rotate: 10 }}
-          className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center text-white font-black text-sm glow-purple">
-          S
-        </motion.div>
-        <span className="font-black text-white text-xl tracking-tight">
-          Skill<span className="gradient-text">DNA</span>
-        </span>
-      </Link>
+    <nav className="navbar">
+      <div className="navbar-inner">
+        {/* Logo */}
+        <Link to="/" className="navbar-logo">
+          <motion.div whileHover={{ rotate: 12 }} className="navbar-logo-icon">
+            🧬
+          </motion.div>
+          <span className="navbar-logo-text">
+            Skill<span className="navbar-logo-accent">DNA</span>
+          </span>
+        </Link>
 
-      <div className="flex items-center gap-2">
-        <Link to="/jobs">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-            className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${isCandidate ? 'bg-violet-600 text-white glow-purple' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
-            👨💻 Candidate
-          </motion.div>
-        </Link>
-        <Link to="/recruiter">
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-            className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer ${isRecruiter ? 'bg-violet-600 text-white glow-purple' : 'text-white/50 hover:text-white hover:bg-white/5'}`}>
-            🏢 Recruiter
-          </motion.div>
-        </Link>
+        {/* Links */}
+        <div className="navbar-links">
+          {navLinks.map(link => (
+            <Link key={link.to} to={link.to} className={`navbar-link ${isActive(link) ? 'navbar-link-active' : ''}`}>
+              {link.label}
+              {isActive(link) && (
+                <motion.div layoutId="navbar-indicator" className="navbar-link-dot" />
+              )}
+            </Link>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="navbar-cta">
+          <Link to="/jobs" className="navbar-btn-outline">Browse Jobs</Link>
+          <Link to="/recruiter/post-job">
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} className="navbar-btn-primary">
+              Post a Job
+            </motion.div>
+          </Link>
+        </div>
       </div>
     </nav>
   )

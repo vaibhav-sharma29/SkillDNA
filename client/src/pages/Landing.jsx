@@ -1,128 +1,209 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, useScroll, useTransform, useInView } from 'framer-motion'
+import './Landing.css'
+
+function FadeIn({ children, delay = 0, x = 0 }) {
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+  return (
+    <motion.div ref={ref}
+      initial={{ opacity: 0, y: 40, x }}
+      animate={inView ? { opacity: 1, y: 0, x: 0 } : {}}
+      transition={{ duration: 0.7, delay, ease: 'easeOut' }}>
+      {children}
+    </motion.div>
+  )
+}
+
+function DNALine() {
+  return (
+    <div className="dna-container">
+      <svg viewBox="0 0 800 60" className="dna-svg" preserveAspectRatio="none">
+        <motion.path
+          d="M0,30 L100,30 L120,30 L135,8 L150,52 L165,5 L180,55 L195,30 L240,30 L800,30"
+          fill="none" stroke="url(#dnaGrad)" strokeWidth="2" strokeLinecap="round"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={{ pathLength: 1, opacity: 1 }}
+          transition={{ duration: 2.5, ease: 'easeInOut', repeat: Infinity, repeatDelay: 1.5 }}
+        />
+        <defs>
+          <linearGradient id="dnaGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="transparent" />
+            <stop offset="35%" stopColor="#7c3aed" />
+            <stop offset="100%" stopColor="#a78bfa" />
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  )
+}
 
 const features = [
-  { icon: '🔍', title: 'GitHub Signal Extraction', desc: 'Real commits, languages, project complexity — not resume keywords', color: 'from-violet-500/20 to-purple-500/20', border: 'border-violet-500/20' },
-  { icon: '📄', title: 'Resume vs Reality Check', desc: 'AI verifies if resume claims match actual GitHub evidence', color: 'from-blue-500/20 to-cyan-500/20', border: 'border-blue-500/20' },
-  { icon: '🤖', title: 'AI-Powered Scoring', desc: 'Groq LLaMA matches candidate signals against job description', color: 'from-emerald-500/20 to-teal-500/20', border: 'border-emerald-500/20' },
-  { icon: '💡', title: 'Explainable Results', desc: 'Every score comes with matched skills, missing skills, and reasoning', color: 'from-amber-500/20 to-orange-500/20', border: 'border-amber-500/20' },
-  { icon: '⚖️', title: 'Bias-Free Check', desc: 'Remove name, gender, university — score stays the same. Proven.', color: 'from-pink-500/20 to-rose-500/20', border: 'border-pink-500/20' },
-  { icon: '📊', title: 'Ranked Leaderboard', desc: 'All applicants auto-ranked by verified skill score with graphs', color: 'from-indigo-500/20 to-violet-500/20', border: 'border-indigo-500/20' },
+  { icon: '🔍', title: 'GitHub Signal Extraction', desc: 'Real commits, languages, project complexity — not resume keywords. We analyze what you actually built.', color: 'rgba(124,58,237,0.1)', border: 'rgba(124,58,237,0.2)' },
+  { icon: '📄', title: 'Resume vs Reality Check', desc: 'AI cross-verifies every skill claim in your resume against actual GitHub evidence. No more fake experts.', color: 'rgba(59,130,246,0.1)', border: 'rgba(59,130,246,0.2)' },
+  { icon: '🤖', title: 'AI-Powered Scoring', desc: 'Groq LLaMA 3 matches candidate signals against job descriptions with explainable 0-100 scores.', color: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.2)' },
+  { icon: '💡', title: 'Explainable Results', desc: 'Every score shows matched skills, missing skills, top strength, and risk flags. No black boxes.', color: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.2)' },
+  { icon: '⚖️', title: 'Bias-Free Verification', desc: 'Anonymize mode removes name, photo, gender. Score stays identical — mathematically proven fairness.', color: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.2)' },
+  { icon: '📊', title: 'Ranked Leaderboard', desc: 'All applicants auto-ranked by verified skill score with radar charts and language distribution graphs.', color: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.2)' },
 ]
 
-const stats = [
-  { value: 'AI', label: 'Powered Scoring' },
-  { value: '100%', label: 'Bias Checked' },
-  { value: 'Real', label: 'GitHub Signals' },
-  { value: 'Live', label: 'Demo Ready' },
+const steps = [
+  { num: '01', title: 'Post a Job', desc: 'Recruiter posts job with required skills and description. Candidates get a direct apply link.' },
+  { num: '02', title: 'Candidate Applies', desc: 'Candidate submits GitHub username + resume PDF. No keyword stuffing, no fake claims.' },
+  { num: '03', title: 'AI Ranks Everyone', desc: 'SkillDNA fetches real GitHub signals, verifies resume, scores with AI, checks for bias — automatically.' },
 ]
 
 export default function Landing() {
-  return (
-    <div className="min-h-screen bg-grid">
-      <div className="hero-glow top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 fixed" />
+  const { scrollY } = useScroll()
+  const heroY = useTransform(scrollY, [0, 500], [0, -80])
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0])
 
-      <section className="relative px-6 pt-24 pb-20 text-center max-w-5xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }}
-            className="inline-flex items-center gap-2 glass-purple rounded-full px-5 py-2.5 text-violet-300 text-sm mb-8 font-medium">
-            <span className="w-2 h-2 bg-violet-400 rounded-full animate-pulse" />
-            Post-Resume Era Talent Intelligence
+  return (
+    <div className="landing">
+
+      {/* HERO */}
+      <section className="landing-hero">
+        <div className="landing-grid-bg" />
+        <div className="landing-orb orb1" />
+        <div className="landing-orb orb2" />
+        <div className="landing-orb orb3" />
+
+        <motion.div className="landing-hero-content" style={{ y: heroY, opacity: heroOpacity }}>
+          <motion.div className="landing-tag" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            🧬 Post-Resume Era Talent Intelligence
           </motion.div>
 
-          <h1 className="text-6xl md:text-7xl font-black text-white mb-6 leading-[1.05] tracking-tight">
-            Hire on{' '}
-            <span className="gradient-text">Real Proof</span>
+          <motion.h1 className="landing-title" initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35, duration: 0.8 }}>
+            Hire on Real Proof
             <br />
-            <span className="text-white/80">Not Polished PDFs</span>
-          </h1>
+            <span className="landing-gradient-text">Not Polished PDFs</span>
+          </motion.h1>
 
-          <p className="text-white/50 text-xl mb-12 max-w-2xl mx-auto leading-relaxed">
+          <motion.p className="landing-sub" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
             SkillDNA analyzes GitHub activity, verifies resume claims with AI, and explains every hiring decision — transparently and without bias.
-          </p>
+          </motion.p>
 
-          <div className="flex items-center justify-center gap-4 flex-wrap mb-16">
-            <Link to="/recruiter">
-              <motion.button whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(124,58,237,0.4)' }} whileTap={{ scale: 0.97 }}
-                className="bg-gradient-to-r from-violet-600 to-purple-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all">
-                🏢 I'm a Recruiter
-              </motion.button>
-            </Link>
-            <Link to="/jobs">
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}
-                className="glass border border-white/10 hover:border-violet-500/40 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all">
-                👨‍💻 I'm a Candidate
-              </motion.button>
-            </Link>
-          </div>
+          <motion.div className="landing-btns" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }}>
+            <Link to="/recruiter" className="landing-btn-primary">🏢 I'm a Recruiter</Link>
+            <Link to="/jobs" className="landing-btn-outline">👨💻 I'm a Candidate</Link>
+          </motion.div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
-            {stats.map((s, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.1 }}
-                className="glass rounded-2xl p-4 text-center">
-                <div className="text-2xl font-black gradient-text">{s.value}</div>
-                <div className="text-white/40 text-xs mt-1">{s.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </section>
+          <DNALine />
 
-      <section className="px-6 py-16 max-w-5xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="glass border border-red-500/15 rounded-3xl p-8 mb-6">
-          <h2 className="text-2xl font-bold text-white mb-6 text-center">The Hiring Crisis is Real</h2>
-          <div className="grid md:grid-cols-2 gap-5">
+          <motion.div className="landing-stats" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9 }}>
             {[
-              { icon: '🤖', title: 'AI-Spam Flood', color: 'text-red-400', desc: 'Generative AI has weaponised applications. Recruiters drown in perfectly optimised, largely synthetic resumes indistinguishable from real ones.' },
-              { icon: '⏳', title: 'Skill Half-Life Collapse', color: 'text-orange-400', desc: 'Average technical skill becomes obsolete in under 2.5 years. Static credentials are fundamentally backward-looking.' },
-            ].map((item, i) => (
-              <div key={i} className="glass rounded-2xl p-5">
-                <div className={`${item.color} font-semibold mb-2 text-lg`}>{item.icon} {item.title}</div>
-                <p className="text-white/50 text-sm leading-relaxed">{item.desc}</p>
+              { value: 'AI', label: 'Powered Scoring' },
+              { value: '100%', label: 'Bias Checked' },
+              { value: 'Real', label: 'GitHub Signals' },
+              { value: 'Live', label: 'Demo Ready' },
+            ].map((s, i) => (
+              <div key={i} className="landing-stat">
+                <span className="landing-stat-value">{s.value}</span>
+                <span className="landing-stat-label">{s.label}</span>
               </div>
             ))}
-          </div>
+          </motion.div>
+        </motion.div>
+
+        <motion.div className="landing-scroll-hint" animate={{ y: [0, 10, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+          ↓
         </motion.div>
       </section>
 
-      <section className="px-6 py-16 max-w-6xl mx-auto">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-3">How SkillDNA <span className="gradient-text">Solves It</span></h2>
-          <p className="text-white/40">Six powerful features working together</p>
-        </motion.div>
-        <div className="grid md:grid-cols-3 gap-5">
-          {features.map((f, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-              className={`glass card-hover rounded-2xl p-6 border ${f.border}`}>
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${f.color} flex items-center justify-center text-2xl mb-4`}>{f.icon}</div>
-              <h3 className="text-white font-semibold mb-2">{f.title}</h3>
-              <p className="text-white/45 text-sm leading-relaxed">{f.desc}</p>
-            </motion.div>
+      {/* PROBLEM + SOLUTION */}
+      <section className="landing-problem-section">
+        <div className="landing-problem-inner">
+          <FadeIn x={-40}>
+            <div className="landing-problem-card">
+              <div className="landing-card-icon">⚠️</div>
+              <h2>The Hiring Crisis</h2>
+              <p>Generative AI has weaponised job applications. Recruiters drown in perfectly optimised, largely synthetic resumes — indistinguishable from genuine signals of competence. The average technical skill becomes obsolete in under 2.5 years.</p>
+            </div>
+          </FadeIn>
+          <FadeIn x={40} delay={0.15}>
+            <div className="landing-solution-card">
+              <div className="landing-card-icon">💡</div>
+              <h2>The SkillDNA Solution</h2>
+              <p>We surface genuine evidence of a candidate's abilities through real-world artefacts — GitHub contributions, commit quality, project complexity — and verify every resume claim against actual code. No black boxes. No bias.</p>
+              <div className="landing-solution-badges">
+                {['GitHub Analysis', 'Resume Verify', 'AI Scoring', 'Bias Check', 'Ranked List'].map((b, i) => (
+                  <span key={i} className="landing-badge">{b}</span>
+                ))}
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className="landing-how-section">
+        <FadeIn>
+          <div className="landing-section-header">
+            <h2>How It Works</h2>
+            <p>Three steps from job post to verified ranked candidates</p>
+          </div>
+        </FadeIn>
+        <div className="landing-steps">
+          {steps.map((s, i) => (
+            <FadeIn key={i} delay={i * 0.15}>
+              <div className="landing-step-card">
+                <div className="landing-step-num">{s.num}</div>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </div>
+            </FadeIn>
           ))}
         </div>
       </section>
 
-      <section className="px-6 py-24 text-center">
-        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="max-w-2xl mx-auto">
-          <h2 className="text-4xl font-bold text-white mb-4">Ready to see <span className="gradient-text">real talent?</span></h2>
-          <p className="text-white/40 mb-8">Post a job or apply with your GitHub. Results in seconds.</p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Link to="/recruiter">
-              <motion.button whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(124,58,237,0.3)' }} whileTap={{ scale: 0.97 }}
-                className="bg-gradient-to-r from-violet-600 to-purple-700 text-white px-8 py-4 rounded-2xl font-semibold text-lg">
-                Post a Job →
-              </motion.button>
-            </Link>
-            <Link to="/jobs">
-              <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}
-                className="glass border border-white/10 hover:border-violet-500/40 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all">
-                Browse Jobs →
-              </motion.button>
-            </Link>
+      {/* FEATURES */}
+      <section className="landing-features-section">
+        <FadeIn>
+          <div className="landing-section-header">
+            <h2>What Makes SkillDNA Different</h2>
+            <p>Six powerful features working together to eliminate hiring bias and resume fraud</p>
           </div>
-        </motion.div>
+        </FadeIn>
+        <div className="landing-features-grid">
+          {features.map((f, i) => (
+            <FadeIn key={i} delay={i * 0.08}>
+              <div className="landing-feature-card" style={{ background: f.color, borderColor: f.border }}>
+                <div className="landing-feature-icon">{f.icon}</div>
+                <h3>{f.title}</h3>
+                <p>{f.desc}</p>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
       </section>
+
+      {/* CTA */}
+      <section className="landing-cta-section">
+        <FadeIn>
+          <div className="landing-cta-inner">
+            <h2>Ready to hire on <span className="landing-gradient-text">real proof?</span></h2>
+            <p>Post a job or apply with your GitHub. AI does the rest.</p>
+            <div className="landing-btns">
+              <Link to="/recruiter" className="landing-btn-primary">Post a Job →</Link>
+              <Link to="/jobs" className="landing-btn-outline">Browse Jobs →</Link>
+            </div>
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="landing-footer">
+        <div className="landing-footer-inner">
+          <div className="landing-footer-logo">
+            <div className="landing-logo-icon">🧬</div>
+            <span>Skill<span className="landing-gradient-text">DNA</span></span>
+          </div>
+          <p>Built for Techkriti '26 × Eightfold AI Hackathon</p>
+          <p className="landing-footer-disclaimer">AI-powered talent intelligence · GitHub signals · Bias-free hiring</p>
+        </div>
+      </footer>
+
     </div>
   )
 }
