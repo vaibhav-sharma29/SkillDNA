@@ -15,7 +15,7 @@ router.post('/verify', upload.single('resume'), async (req, res) => {
     const resumeText = await new Promise((resolve, reject) => {
       const parser = new PDFParser()
       parser.on('pdfParser_dataReady', data => {
-        const text = data.Pages.map(p => p.Texts.map(t => decodeURIComponent(t.R[0].T)).join(' ')).join('\n')
+        const text = data.Pages.map(p => p.Texts.map(t => { try { return decodeURIComponent(t.R[0].T) } catch { return t.R[0].T } }).join(' ')).join('\n')
         resolve(text)
       })
       parser.on('pdfParser_dataError', reject)

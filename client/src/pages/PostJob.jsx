@@ -24,46 +24,49 @@ export default function PostJob() {
     <div className="min-h-screen px-6 py-12 max-w-2xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-white mb-2">Post a <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-purple-500">Job</span></h1>
-          <p className="text-white/50">Candidates will apply with GitHub + resume — AI ranks them automatically</p>
+          <div className="inline-flex items-center gap-2 glass-purple rounded-full px-4 py-2 text-violet-300 text-xs font-medium mb-4">
+            🏢 Recruiter Portal
+          </div>
+          <h1 className="text-5xl font-black text-white mb-3">Post a <span className="gradient-text">Job</span></h1>
+          <p className="text-white/40">Candidates apply with GitHub + resume — AI ranks them automatically</p>
         </div>
 
-        <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-5">
+        <div className="glass rounded-3xl p-7 space-y-5">
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-white/70 text-sm font-medium mb-2 block">Job Title *</label>
+              <label className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-2 block">Job Title *</label>
               <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })}
                 placeholder="e.g. Senior Full Stack Developer"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-violet-500 transition-colors" />
+                className="w-full glass border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-violet-500/50 transition-all" />
             </div>
             <div>
-              <label className="text-white/70 text-sm font-medium mb-2 block">Company *</label>
+              <label className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-2 block">Company *</label>
               <input value={form.company} onChange={e => setForm({ ...form, company: e.target.value })}
                 placeholder="e.g. Eightfold AI"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-violet-500 transition-colors" />
+                className="w-full glass border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-violet-500/50 transition-all" />
             </div>
           </div>
 
           <div>
-            <label className="text-white/70 text-sm font-medium mb-2 block">Job Description *</label>
+            <label className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-2 block">Job Description *</label>
             <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })}
               placeholder="Describe the role, responsibilities, and requirements..."
               rows={6}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-violet-500 transition-colors resize-none" />
+              className="w-full glass border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-violet-500/50 transition-all resize-none" />
           </div>
 
           <div>
-            <label className="text-white/70 text-sm font-medium mb-2 block">Required Skills <span className="text-white/30">(comma separated)</span></label>
+            <label className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-2 block">Required Skills <span className="text-white/25 normal-case">(comma separated)</span></label>
             <input value={form.skills} onChange={e => setForm({ ...form, skills: e.target.value })}
               placeholder="React, Node.js, MongoDB, Docker"
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-violet-500 transition-colors" />
+              className="w-full glass border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-violet-500/50 transition-all" />
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-white/70 text-sm font-medium mb-2 block">Experience Required</label>
+              <label className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-2 block">Experience</label>
               <select value={form.experience} onChange={e => setForm({ ...form, experience: e.target.value })}
-                className="w-full bg-[#0a0a0f] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500 transition-colors">
+                className="w-full bg-[#050508] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-violet-500/50 transition-all">
                 <option value="">Select experience</option>
                 <option value="0-1 years">0-1 years</option>
                 <option value="1-3 years">1-3 years</option>
@@ -71,20 +74,21 @@ export default function PostJob() {
                 <option value="5+ years">5+ years</option>
               </select>
             </div>
-            <div className="flex items-center gap-3 mt-6">
+            <div className="flex items-center gap-4 mt-6">
               <button onClick={() => setForm({ ...form, remote: !form.remote })}
-                className={`w-12 h-6 rounded-full transition-colors relative ${form.remote ? 'bg-violet-600' : 'bg-white/20'}`}>
-                <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${form.remote ? 'translate-x-6' : 'translate-x-0.5'}`} />
+                className={`w-12 h-6 rounded-full transition-all relative ${form.remote ? 'bg-violet-600' : 'bg-white/10'}`}>
+                <motion.div animate={{ x: form.remote ? 24 : 2 }} transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                  className="w-5 h-5 bg-white rounded-full absolute top-0.5" />
               </button>
-              <span className="text-white/70 text-sm">Remote position</span>
+              <span className="text-white/60 text-sm">Remote position</span>
             </div>
           </div>
 
-          {error && <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 text-red-400 text-sm">{error}</div>}
+          {error && <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-red-400 text-sm">{error}</div>}
 
-          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+          <motion.button whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(124,58,237,0.3)' }} whileTap={{ scale: 0.98 }}
             onClick={handleSubmit} disabled={loading}
-            className="w-full bg-gradient-to-r from-violet-600 to-purple-700 hover:from-violet-700 hover:to-purple-800 disabled:opacity-50 text-white py-4 rounded-xl font-semibold text-lg transition-all">
+            className="w-full bg-gradient-to-r from-violet-600 to-purple-700 disabled:opacity-50 text-white py-4 rounded-2xl font-bold text-lg transition-all">
             {loading ? 'Posting...' : 'Post Job →'}
           </motion.button>
         </div>

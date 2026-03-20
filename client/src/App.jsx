@@ -11,7 +11,7 @@ import Report from './pages/Report'
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-[#0a0a0f]">
+      <div className="min-h-screen bg-[#050508]">
         <Navbar />
         <Routes>
           <Route path="/" element={<Landing />} />
